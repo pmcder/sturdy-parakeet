@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { resolveMovement } from './world.js';
 
-const SKIN = new THREE.MeshStandardMaterial({ color: 0xd9a88a, roughness: 0.8 });
-const SUIT = new THREE.MeshStandardMaterial({ color: 0x2a2a4a, roughness: 0.7 });
+const SKIN = new THREE.MeshStandardMaterial({ color: 0xe3b79a, roughness: 0.8, emissive: 0x3a2a24 });
+const SUIT = new THREE.MeshStandardMaterial({ color: 0x4a4a8a, roughness: 0.7, emissive: 0x1a1a40 });
 const TRIM = new THREE.MeshBasicMaterial({ color: 0x19f3ff });
 
 function box(w, h, d, mat, x = 0, y = 0, z = 0) {
@@ -24,6 +24,10 @@ export function createAvatar() {
   const armR = new THREE.Group(); armR.position.set(0.5, 1.6, 0);
   armR.add(box(0.22, 0.8, 0.25, SUIT, 0, -0.4, 0));
   group.add(torsoMesh, head, legL, legR, armL, armR, box(0.7, 0.06, 0.41, TRIM, 0, 1.0, 0));
+
+  const glow = new THREE.PointLight(0x9aa8ff, 12, 9, 2); // keeps the avatar readable in the dark
+  glow.position.set(0, 2.6, 1.2);
+  group.add(glow);
 
   const slots = {
     head: new THREE.Group(),
@@ -60,7 +64,7 @@ export function createPlayer(scene, world) {
   const pos = avatar.group.position;
   pos.copy(world.spawn);
 
-  let yaw = 0, pitch = 0.35, facing = 0, speed01 = 0;
+  let yaw = 0, pitch = 0.5, facing = 0, speed01 = 0;
   const RADIUS = 0.45, SPEED = 6;
   const camTarget = new THREE.Vector3();
 
@@ -99,7 +103,7 @@ export function createPlayer(scene, world) {
       avatar.animate(t, speed01);
 
       // Third-person follow camera
-      const dist = 6;
+      const dist = 7;
       camTarget.set(pos.x, 1.6, pos.z);
       camera.position.set(
         pos.x + Math.sin(yaw) * Math.cos(pitch) * dist,

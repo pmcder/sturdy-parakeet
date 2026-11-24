@@ -20,7 +20,7 @@ function windowTexture(rand) {
   g.fillStyle = '#000'; g.fillRect(0, 0, 32, 64);
   for (let y = 2; y < 64; y += 6) {
     for (let x = 2; x < 32; x += 6) {
-      if (rand() < 0.45) {
+      if (rand() < 0.3) {
         g.fillStyle = ['#19f3ff', '#ffb02e', '#ff2bd6'][Math.floor(rand() * 3)];
         g.fillRect(x, y, 3, 4);
       }
@@ -64,7 +64,7 @@ export function buildWorld(scene) {
     tex.needsUpdate = true;
     tex.repeat.set(Math.max(1, Math.round(w / 2)), Math.max(1, Math.round(h / 4)));
     const mat = new THREE.MeshStandardMaterial({
-      color: 0x15122a, roughness: 0.8, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.9,
+      color: 0x15122a, roughness: 0.8, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.55,
     });
     const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
     b.position.set(x, h / 2, z);

@@ -25,8 +25,8 @@ export function createAvatar() {
   armR.add(box(0.22, 0.8, 0.25, SUIT, 0, -0.4, 0));
   group.add(torsoMesh, head, legL, legR, armL, armR, box(0.7, 0.06, 0.41, TRIM, 0, 1.0, 0));
 
-  const glow = new THREE.PointLight(0x9aa8ff, 12, 9, 2); // keeps the avatar readable in the dark
-  glow.position.set(0, 2.6, 1.2);
+  const glow = new THREE.PointLight(0x9aa8ff, 4, 9, 2); // keeps the avatar readable in the dark
+  glow.position.set(0, 2.2, 2);
   group.add(glow);
 
   const slots = {

@@ -1,10 +1,10 @@
 import * as THREE from 'three';
+import { createRenderer } from './renderer.js';
 
-const canvas = document.getElementById('game');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+const gfx = createRenderer(document.getElementById('game'));
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x07060f);
-const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+const camera = new THREE.PerspectiveCamera(60, gfx.aspect(), 0.1, 100);
 camera.position.set(0, 1, 3);
 
 const cube = new THREE.Mesh(
@@ -13,16 +13,13 @@ const cube = new THREE.Mesh(
 );
 scene.add(cube);
 
-function resize() {
-  renderer.setSize(window.innerWidth, window.innerHeight, false);
-  camera.aspect = window.innerWidth / window.innerHeight;
+window.addEventListener('resize', () => {
+  camera.aspect = gfx.aspect();
   camera.updateProjectionMatrix();
-}
-window.addEventListener('resize', resize);
-resize();
+});
 
-renderer.setAnimationLoop((t) => {
+gfx.renderer.setAnimationLoop((t) => {
   cube.rotation.y = t / 1000;
   cube.rotation.x = t / 1700;
-  renderer.render(scene, camera);
+  gfx.render(scene, camera, t / 1000);
 });

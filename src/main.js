@@ -1,25 +1,29 @@
 import * as THREE from 'three';
 import { createRenderer } from './renderer.js';
+import { buildWorld } from './world.js';
+import { createPlayer } from './player.js';
+import { createInput } from './input.js';
 
-const gfx = createRenderer(document.getElementById('game'));
+const canvas = document.getElementById('game');
+const gfx = createRenderer(canvas);
+const input = createInput(canvas);
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x07060f);
-const camera = new THREE.PerspectiveCamera(60, gfx.aspect(), 0.1, 100);
-camera.position.set(0, 1, 3);
+const camera = new THREE.PerspectiveCamera(60, gfx.aspect(), 0.1, 120);
 
-const cube = new THREE.Mesh(
-  new THREE.BoxGeometry(1, 1, 1),
-  new THREE.MeshBasicMaterial({ color: 0xff2bd6, wireframe: true }),
-);
-scene.add(cube);
+const world = buildWorld(scene);
+const player = createPlayer(scene, world);
 
 window.addEventListener('resize', () => {
   camera.aspect = gfx.aspect();
   camera.updateProjectionMatrix();
 });
 
-gfx.renderer.setAnimationLoop((t) => {
-  cube.rotation.y = t / 1000;
-  cube.rotation.x = t / 1700;
-  gfx.render(scene, camera, t / 1000);
+const clock = new THREE.Clock();
+gfx.renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), 0.1);
+  const t = clock.elapsedTime;
+  player.update(dt, t, input, camera);
+  world.update(dt, t);
+  gfx.render(scene, camera, t);
+  input.endFrame();
 });

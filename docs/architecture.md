@@ -15,7 +15,8 @@ flowchart TD
   input -->|keys / mouse| player
   input -->|I / Tab / Esc| main
   world[world.js<br/>city, colliders, pickups] -->|colliders| player
-  player[player.js<br/>avatar + slots] -->|E near pickup| items
+  player[player.js<br/>avatar + slots] -->|createAvatar| previewScene
+  main -->|E near pickup| items
   items[items.js<br/>defs + mesh builders] --> inventory
   inventory[inventory.js<br/>state + DOM UI] -->|selected item| previewScene
   inventory -->|equip / unequip| player
@@ -23,7 +24,7 @@ flowchart TD
   renderer[renderer.js<br/>low-res + post FX] --> canvas((canvas))
 ```
 
-Modules not yet implemented are marked in the milestone history; the diagram shows the target design.
+`previewScene.js` reuses `createAvatar` from `player.js`, so the try-on avatar is identical to the in-world one. Equipment is synced from inventory state to both avatars in `main.js`.
 
 ## Security model
 - Static site: no backend, no accounts, no user-supplied content, no runtime network requests.
